@@ -1,5 +1,6 @@
 # 📈 AAPLNotifier – Notificações em Tempo Real das Ações da Apple via Telegram
-monitora o preço das ações da Apple (AAPL) em tempo real, gera gráficos e envia notificações diretamente no Telegram. Ideal para investidores e entusiastas do mercado financeiro que querem se manter atualizados com dados visuais.
+monitora o preço das ações da Apple (AAPL) em tempo real, gera gráficos e envia notificações diretamente no Telegram.
+
 
 ## 🚀 Funcionalidades
 
