@@ -1,0 +1,16 @@
+.venv/
+__pycache__/
+*.py[cod]
+
+# banco de dados local
+market.db
+market.db-wal
+market.db-shm
+
+# configuração/segredos
+.env
+
+# artefatos de execução
+server_out.log
+server_err.log
+dashboard.png

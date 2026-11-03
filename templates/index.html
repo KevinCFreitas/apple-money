@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Market Watch — Monitor de Preços</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%93%88%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script src="{{ url_for('static', filename='js/vendor/chart.umd.min.js') }}"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">📈</div>
+      <div>
+        <h1>Market Watch</h1>
+        <p>Monitor de preços em tempo real</p>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      <span id="status-pill" class="status-pill">
+        <span class="dot"></span><span id="status-text">Conectando…</span>
+      </span>
+      <button id="notify-btn" class="btn ghost" title="Ativar notificações do navegador">🔔 Ativar notificações</button>
+      <button id="refresh-btn" class="btn ghost">↻ Atualizar agora</button>
+      <button id="add-btn" class="btn primary">+ Adicionar ativo</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="assets-section">
+      <div class="section-head">
+        <h2>Ativos monitorados</h2>
+        <span id="assets-count" class="muted"></span>
+      </div>
+      <div id="assets-grid" class="assets-grid"></div>
+      <div id="empty-state" class="empty-state hidden">
+        <p>Nenhum ativo monitorado ainda.</p>
+        <button id="empty-add-btn" class="btn primary">Adicionar o primeiro ativo</button>
+      </div>
+    </section>
+
+    <section class="detail-section">
+      <div class="panel chart-panel">
+        <div class="panel-head">
+          <div>
+            <h2 id="chart-title">Histórico de preço</h2>
+            <p id="chart-subtitle" class="muted">Selecione um ativo</p>
+          </div>
+          <div class="range-group" id="range-group">
+            <button data-minutes="60">1h</button>
+            <button data-minutes="360">6h</button>
+            <button data-minutes="1440" class="active">24h</button>
+            <button data-minutes="10080">7d</button>
+            <button data-minutes="0">Tudo</button>
+          </div>
+        </div>
+        <div class="chart-wrap">
+          <canvas id="price-chart"></canvas>
+          <div id="chart-empty" class="chart-empty hidden">Sem dados suficientes para o período selecionado.</div>
+        </div>
+      </div>
+    </section>
+
+    <aside class="side-section">
+      <div class="panel feed-panel">
+        <div class="panel-head">
+          <h2>Atividade</h2>
+          <button id="clear-feed" class="link-btn">limpar</button>
+        </div>
+        <ul id="feed" class="feed">
+          <li class="feed-empty">Aguardando eventos…</li>
+        </ul>
+      </div>
+
+      <div class="panel settings-panel">
+        <h2>Notificações</h2>
+        <label class="switch-row">
+          <span>Avisar a cada variação</span>
+          <input type="checkbox" id="notify-all">
+        </label>
+        <label class="switch-row">
+          <span>Alertas de limite</span>
+          <input type="checkbox" id="notify-alerts" checked>
+        </label>
+        <p class="muted small">
+          As notificações aparecem quando esta aba estiver aberta. Ative as notificações
+          do navegador para vê-las em segundo plano.
+        </p>
+        <div id="status-detail" class="status-detail"></div>
+      </div>
+    </aside>
+  </main>
+
+  <div id="toast-container" class="toast-container"></div>
+
+  <div id="modal" class="modal hidden">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h2 id="modal-title">Adicionar ativo</h2>
+        <button id="close-modal" class="icon-btn" aria-label="Fechar">✕</button>
+      </div>
+      <form id="asset-form" autocomplete="off">
+        <label>Símbolo no Yahoo Finance
+          <input name="symbol" required maxlength="24" placeholder="Ex.: AAPL34.SA, AAPL, PETR4.SA">
+        </label>
+        <label>Nome (opcional)
+          <input name="name" maxlength="80" placeholder="Preenchido automaticamente">
+        </label>
+        <div class="form-row">
+          <label>Alerta de alta (R$)
+            <input name="alert_above" type="number" step="0.01" placeholder="Opcional">
+          </label>
+          <label>Alerta de baixa (R$)
+            <input name="alert_below" type="number" step="0.01" placeholder="Opcional">
+          </label>
+        </div>
+        <p class="muted small">
+          Exemplos: <strong>AAPL34.SA</strong> (Apple BDR), <strong>AAPL</strong> (Apple EUA),
+          <strong>MSFT</strong>, <strong>PETR4.SA</strong>, <strong>VALE3.SA</strong>.
+          Nome e moeda são preenchidos automaticamente pelo Yahoo Finance.
+        </p>
+        <div id="form-errors" class="form-errors"></div>
+        <div class="modal-actions">
+          <button type="button" id="cancel-modal" class="btn ghost">Cancelar</button>
+          <button type="submit" class="btn primary">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>window.POLL_INTERVAL = {{ poll_interval|tojson }};</script>
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

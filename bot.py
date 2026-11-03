@@ -13,8 +13,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-TOKEN = '7608403924:AAG3M8tkiuSf3nw7k2-pBNi_syTPkTgH3O8'
-CHAT_ID = '1067276034'
+TOKEN = os.environ.get('TELEGRAM_TOKEN', '')
+CHAT_ID = os.environ.get('TELEGRAM_CHAT_ID', '')
 ALERTA_VALOR = 100.00
 ARQUIVO = 'historico_precos.csv'
 GRAFICO = 'grafico.png'
